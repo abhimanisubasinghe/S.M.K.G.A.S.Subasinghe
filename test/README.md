@@ -1,7 +1,9 @@
 # Linked list
 
 Linked list is going to be the basic data structure I am going to use in this project 
+
 This is a revision
+
 This includes
 - creating a link list
 - inserting a node in the begining of the list
