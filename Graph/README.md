@@ -1,5 +1,5 @@
 # Graph Implementation
 
-- Creating a graph and 
+- Creating a graph
 - Adding adjacent node 
 - Displaying the graph
