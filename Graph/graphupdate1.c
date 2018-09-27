@@ -1,31 +1,29 @@
 #include <stdio.h>
 #include <malloc.h>
 
-//in the code I have used word node for the vertex in the graph
-
-int noof_nodes;
+int noof_vertices;
 
 //structure for creating adjacent edges
 struct adj{
-    struct node *parent;
-    struct node *child;
+    struct vertex *parent;
+    struct vertex *child;
     struct adj *next;
 };
 
-//structure for a node 
-struct node{
+//structure for a vertex 
+struct vertex{
     int data;
-    struct node *next;
+    struct vertex *next;
     struct adj *head;
 };
 
 //initializing the graph structure
-struct node *start = NULL;
+struct vertex *start = NULL;
 
-//funtion to create a node 
-void createnode(int x){
-    struct node *new,*ptr;
-    new = (struct node *)malloc(sizeof(struct node));
+//funtion to create a vertex 
+void createvertex(int x){
+    struct vertex *new,*ptr;
+    new = (struct vertex *)malloc(sizeof(struct vertex));
     new -> data = x;
     new -> next = NULL;
     new -> head = NULL;
@@ -40,30 +38,30 @@ void createnode(int x){
 }
 
 //funtion to add adjacent vertex to given vertex
-void createadj(struct node *p){
+void createadj(struct vertex *p){
     int noof_adj;
-    printf("\nHow many adj nodes: ");
+    printf("\nHow many adj vertices: ");
     scanf("%d",&noof_adj);
     int i = noof_adj;
     while(i!=0){
         struct adj *new;
         new = (struct adj *)malloc(sizeof(struct adj));
         new -> parent = p;
-        printf("\nEnter the adj node: ");
-        int adjnode;
-        scanf("%d",&adjnode);
-        struct node *ptr;
+        printf("\nEnter the adj vertex: ");
+        int adjvertex;
+        scanf("%d",&adjvertex);
+        struct vertex *ptr;
         ptr = start;
         while(ptr != NULL){
-            if(ptr -> data == adjnode)
+            if(ptr -> data == adjvertex)
                 break;
             ptr = ptr -> next;
         }
         if(ptr == NULL){
-            printf("\nERROR: Node not found");
+            printf("\nERROR: Vertex not found");
             free(new);
         }
-        else if( ptr -> data == adjnode ){
+        else if( ptr -> data == adjvertex ){
             new -> child = ptr;
             new -> next = NULL;
             if(p->head == NULL)
@@ -82,49 +80,49 @@ void createadj(struct node *p){
 
 //funtion to create a graph
 void creategraph(){
-    int i = noof_nodes;
+    int i = noof_vertices;
     while(i!=0){
         int x;
         printf("\nInsert data: ");
         scanf("%d",&x);
-        createnode(x);
+        createvertex(x);
         i--;
     }
-    printf("\nNodes have been recorded");
-    struct node *ptr;
+    printf("\nVertexs have been recorded");
+    struct vertex *ptr;
     ptr = start;
     while(ptr != NULL){
-        printf("\nRecording adj node details of %d",ptr -> data);
+        printf("\nRecording adj vertex details of %d",ptr -> data);
         createadj(ptr);
         ptr = ptr -> next;
     }
 }
 
-void addnode(){
-    printf("\nCreating a new node");
+void addvertex(){
+    printf("\nCreating a new vertex");
     int x;
     printf("\nInsert data: ");
     scanf("%d",&x);
-    createnode(x);
-    printf("\nNode has been recorded");
-    struct node *ptr;
+    createvertex(x);
+    printf("\nVertex has been recorded");
+    struct vertex *ptr;
     ptr = start;
     while(ptr -> next != NULL)
         ptr = ptr -> next;
-    printf("\nRecording adj node details of %d",ptr -> data);
+    printf("\nRecording adj vertex details of %d",ptr -> data);
     createadj(ptr);
 }
 
 //funtion to display the graph
 void display(){
     printf("\nGRAPH");
-    struct node *ptr;
+    struct vertex *ptr;
     ptr = start;
     if(start == NULL )
         printf("\nERROR: Graph is empty");
     else{
         while(ptr!=NULL){
-            printf("\nNode: %d\t\t",ptr->data);
+            printf("\nVertex: %d\t\t",ptr->data);
             struct adj *a;
             a = ptr -> head;
             while(a!=NULL){
@@ -138,9 +136,9 @@ void display(){
 }
 
 void createdj(){
-    struct node *ptr;
+    struct vertex *ptr;
     ptr = start;
-    printf("\nTo which node do you need to add an edge: ");
+    printf("\nTo which vertex do you need to add an edge: ");
     int x;
     scanf("%d",&x);
     while(ptr != NULL){
@@ -149,13 +147,13 @@ void createdj(){
         ptr = ptr -> next;
     }
     if( ptr == NULL )
-        printf("\nERROR: There is no such node");
+        printf("\nERROR: There is no such vertex");
     else if(ptr->data == x){
         createadj(ptr);
     }
 }
 
-void deletedj(struct node *p,int x){
+void deletedj(struct vertex *p,int x){
     struct adj *ptr,*preptr;
     ptr = p -> head;
     while(ptr!=NULL){
@@ -178,8 +176,8 @@ void deletedj(struct node *p,int x){
     }
 }
 
-void deletenodedj(struct node *p){
-    struct node *ptr;
+void deletevertexdj(struct vertex *p){
+    struct vertex *ptr;
     ptr = start;
     while(ptr != NULL){
         struct adj *a,*b;
@@ -195,7 +193,7 @@ void deletenodedj(struct node *p){
     }
 }
 
-void clearnode(struct node *p){
+void clearvertex(struct vertex *p){
     struct adj *a,*b;
     a = p -> head;
     while(a!=NULL){
@@ -205,10 +203,10 @@ void clearnode(struct node *p){
     }
 }
 
-void deletenode(struct node *p){
-    deletenodedj(p);
-    clearnode(p);
-    struct node *ptr,*preptr;
+void deletevertex(struct vertex *p){
+    deletevertexdj(p);
+    clearvertex(p);
+    struct vertex *ptr,*preptr;
     ptr = start;
     while(ptr!=p){
         preptr = ptr;
@@ -225,12 +223,12 @@ void deletenode(struct node *p){
 }
 
 void main(){
-    printf("\nEnter the number of nodes: ");
-    scanf("%d",&noof_nodes);
+    printf("\nEnter the number of vertices: ");
+    scanf("%d",&noof_vertices);
     int opt;
     do{
         printf("\n-----------------------------------------------------------------------------------\n");
-        printf("MAIN MENUE\n1.CREATE GRAPH\t2.DISPLAY\t3.INSERT A NEW NODE\t4.INSERT EDGES\t5.DELETE AN EDGE\t6.DELETE A NODE EDGES\t7.DELETE NODE\t8.EXIT");
+        printf("MAIN MENUE\n1.CREATE GRAPH\t2.DISPLAY\t3.INSERT A NEW VERTEX\t4.INSERT EDGES\t5.DELETE AN EDGE\t6.CLEAR \t7.DELETE VERTEX\t8.EXIT");
         printf("\nInsert your option: ");
         scanf("%d",&opt);
         switch (opt){
@@ -241,17 +239,17 @@ void main(){
                 display();
                 break;
             case 3: 
-                addnode();
+                addvertex();
                 break;
             case 4: 
                 createdj();
                 break;
             case 5:
                 printf("\nWhich edge do you need to delete?");
-                printf("\nEnter the first node: ");
+                printf("\nEnter the first vertex: ");
                 int x,y;
                 scanf("%d",&x);
-                struct node *ptr;
+                struct vertex *ptr;
                 ptr = start;
                 while(ptr!=NULL){
                     if(ptr->data == x)
@@ -259,18 +257,18 @@ void main(){
                     ptr = ptr -> next;
                 }
                 if(ptr == NULL)
-                    printf("\nERROR:: Node not found");
+                    printf("\nERROR:: Vertex not found");
                 else if(ptr->data == x){
-                    printf("\nEnter the second node: ");
+                    printf("\nEnter the second vertex: ");
                     scanf("%d",&y);
                     deletedj(ptr,y);
                 }
                 break;
             case 6: 
-                printf("\nWhich node do you want to clear?");
+                printf("\nWhich vertex do you want to clear? ");
                 int a;
                 scanf("%d",&a);
-                struct node *pptr;
+                struct vertex *pptr;
                 pptr = start;
                 while(pptr!=NULL){
                     if(pptr->data == a)
@@ -278,16 +276,16 @@ void main(){
                     pptr = pptr -> next;
                 }
                 if(pptr == NULL)
-                    printf("\nERROR:: Node not found");
+                    printf("\nERROR:: Vertex not found");
                 else if(pptr->data == a){
-                    deletenodedj(pptr);
+                    deletevertexdj(pptr);
                 }
                 break;
             case 7:
-                printf("\nWhich node do you want to delete?");
+                printf("\nWhich vertex do you want to delete? ");
                 int b;
                 scanf("%d",&b);
-                struct node *cptr;
+                struct vertex *cptr;
                 cptr = start;
                 while(cptr!=NULL){
                     if(cptr->data == b)
@@ -295,9 +293,9 @@ void main(){
                     cptr = cptr -> next;
                 }
                 if(cptr == NULL)
-                    printf("\nERROR:: Node not found");
+                    printf("\nERROR:: Vertex not found");
                 else if(cptr->data == b){
-                    deletenode(cptr);
+                    deletevertex(cptr);
                 }
                 break;
             case 8:
