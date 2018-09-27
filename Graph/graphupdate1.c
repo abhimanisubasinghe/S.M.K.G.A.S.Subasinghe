@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
 
-//in the code I have used word vertex for the vertex in the graph
-
 int noof_vertices;
 
 //structure for creating adjacent edges
