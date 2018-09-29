@@ -1,5 +1,5 @@
 # S.M.K.G.A.S.Subasinghe
-03. [Product Name]
+## My Graph :snowflake:
 ------------
 
 # GRAPH IMPLEMENTATION 
@@ -20,7 +20,7 @@
  + User can delete the existing graph and create a new graph
  + Graph's vertices can be displayed with their adjacent vertices
  + According to user given source vertices searching for the reachable vertices
- + Implementation of Dijkstra Algorithm (Still working)
+ + Implementation of Dijkstra Algorithm
  
 ### For Intialization
 ------------
@@ -45,7 +45,7 @@ In this way you can contibute to this project
 ------------
 Visual Studio Code has been used in developing this project 
 
-(To view licence go to this [link](https://code.visualstudio.com/license?lang=en "link"))
+Licence for this project [link](https://github.com/abhimanisubasinghe/S.M.K.G.A.S.Subasinghe/blob/master/LICENSE "link")
 
 ### Screenshots
 ------------
@@ -89,8 +89,11 @@ User can delete the graph if need
 
 ------------
 
-![](https://github.com/abhimanisubasinghe/S.M.K.G.A.S.Subasinghe/blob/master/screen%20shots/ss8.PNG)
-I'm still having errors in implementing the shortest path using Dijsktra algorithm
+![](https://github.com/abhimanisubasinghe/S.M.K.G.A.S.Subasinghe/blob/master/screen%20shots/ss10.PNG)
+I successfully implemented the Dijsktra in the graph
+
+But still there are few issues when finding the shortest path from several nodes
+
 ##### So still working on that
 
 :smile:
