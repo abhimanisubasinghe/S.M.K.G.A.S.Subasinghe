@@ -129,13 +129,15 @@ void main(){
                 struct vertex *pdijhome;
                 pdijhome = start;
                 while(pdijhome != NULL){
-                    if(pdijhome->data==dijhome)
+                    if(pdijhome->data == dijhome)
                         break;
                     pdijhome = pdijhome -> next;
                 }
                 //printf("\nDFS:\t");
-                printf("\npass1");
+                //printf("\npass1 %d",pdijhome->data);
+                rotate(pdijhome);
                 dijkstra(pdijhome);
+                un = NULL;
                 printf("\n");
                 break;
             default:

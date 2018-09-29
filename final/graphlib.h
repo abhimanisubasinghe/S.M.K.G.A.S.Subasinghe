@@ -37,19 +37,12 @@ struct queue{
     struct queue *qnext;
 };
 
-struct list{
-    int distance;
-    struct vertex *ldata;
-    struct list *next;
-};
-
 //initializing the graph structure
 struct vertex *start = NULL;
 //initializing the queue structure
 struct queue *qstart = NULL;
 //initializing the stack structure
 struct stack *stop = NULL;
-struct list *lstart = NULL;
 
 //funtion to add data in to the queue
 void enqueue(int x){
@@ -107,42 +100,6 @@ int pop(){
         stop = stop -> snext;
     }
     return ptr -> sdata;
-}
-
-void addlist(struct vertex *x,int y){
-    struct list *newnode,*ptr,*preptr;
-    newnode = (struct list *)malloc(sizeof(struct list));
-    ptr = lstart; 
-    while(ptr!=NULL){
-        preptr = ptr;
-        if(ptr->ldata->data==x->data)
-            break;
-        ptr = ptr -> next;
-    }
-    if(ptr==NULL){
-        newnode -> ldata = x;
-        newnode -> next = NULL;
-        if(lstart==NULL){
-            newnode -> distance = 0;
-            lstart = newnode;
-        }
-        else{
-            preptr -> next = newnode;
-            newnode -> distance = y;
-        }
-    }
-    else{
-        if(y<ptr->distance)
-            ptr -> distance = y;
-    }
-}
-
-void printlist(){
-    struct list *ptr;
-    ptr = lstart;
-    while(ptr!=NULL){
-        printf("\n%d\t%d\n",ptr->ldata,ptr->distance);
-    }
 }
 
 //funtion to create a vertex 
@@ -369,46 +326,26 @@ void remark(){
 }
 
 
-/*
-void BFS(){
-    struct vertex *ptr;
-    ptr = start;
-    while(ptr != NULL){
-        if(ptr->status == 0){
-            printf("\ncycle\t");
-            enqueue(ptr->data);
-            ptr -> status = 1;
-            while(qstart!=NULL){
-                struct adj *a;
-                struct vertex *search;
-                search = start;
-                while(search->data!=qstart->qdata)
-                    search = search -> next;
-                a = search -> head;
-                //printf("\n");
-                while(a!=NULL){
-                    if(a->child->status==0){
-                        a->child->status = 1;
-                        enqueue(a->child->data);
-                    }
-                    a = a -> next;
-                }
-                int out;
-                out = dequeue();
-                struct vertex *outv;
-                outv = start;
-                while(outv->data!=out)
-                    outv = outv -> next;
-                if(outv->status==1){
-                    outv -> status = 2;
-                    printf("%d\t",out);
-                }
-            }
-        }
-        ptr = ptr -> next;
+//funtion to rotate the start pointer in the graph
+void rotate(struct vertex *x){
+    if(x==start){
+
     }
-    remark();
-}*/
+    else{
+        struct vertex *ptr,*preptr,*pos;
+        ptr = start;
+        while(ptr!=x){
+            preptr = ptr;
+            ptr = ptr ->next;
+        }
+        pos = ptr;
+        while(ptr->next!=NULL)
+            ptr = ptr -> next;
+        ptr -> next = start;
+        start = pos;
+        preptr -> next = NULL;
+    }
+}
 
 //from a given vertex this funtion will do the BFS traversal
 void BFS(struct vertex *x){
@@ -514,55 +451,7 @@ int deletegraph(){
 }
 
 //still working ...
-/*struct STP1{
-    struct vertex *data;
-    struct STP1 *next;
-};
-
-struct STP1 * stpstart1 = NULL;
-
-void stp1push(struct vertex *x){
-    struct STP1 *newnode;
-    newnode = (struct STP1 *)malloc(sizeof(struct STP1));
-    newnode -> data = x;
-    newnode -> next = NULL;
-    if(stpstart1==NULL)
-        stpstart1 = newnode;
-    else{
-        newnode -> next = stpstart1;
-        stpstart1 = newnode;
-    }
-}
-
-void stp1print(){
-    struct STP1 *ptr;
-    ptr = stpstart1;
-    while(ptr!=NULL){
-        printf("\n%d\t%d",ptr->data->data,ptr->data->status);
-    }
-}
-
-struct vertex * stp1pop(){
-    struct STP1 *ptr;
-    ptr = stpstart1;
-    stpstart1 = stpstart1 -> next;
-
-}
-
-int searchstp1(struct vertex *x){
-    struct STP1 *ptr;
-    int flag = 0;
-    ptr = stpstart1;
-    while(ptr!=NULL){
-        if(ptr->data->data==x->data){
-            flag = 1;
-            break;
-        }
-        ptr = ptr -> next;
-    }
-    return flag;
-}
-*/
+//funtion set status to INFINITY in all the vertex
 void redes(){
     struct vertex *restate;
     restate = start;
@@ -572,13 +461,16 @@ void redes(){
     }
 }
 
+//structure of the node in a unvisited list
 struct unvisitedl{
     struct vertex *data;
     struct unvisitedl *next;
 };
 
+//initializing the list
 struct unvisitedl *un = NULL;
 
+//funtion to insert vertices to unvisited list
 void inunvisited(struct vertex *x){
     struct unvisitedl * newnode,*ptr;
     newnode = (struct unvisitedl *)malloc(sizeof(struct unvisitedl));
@@ -594,6 +486,7 @@ void inunvisited(struct vertex *x){
     }
 }
 
+//funtion to delete the vertices from the  unvisited list
 struct vertex * outunvisited(struct vertex *x){
     struct unvisitedl *ptr,*preptr;
     ptr = un;
@@ -608,17 +501,19 @@ struct vertex * outunvisited(struct vertex *x){
         un = un -> next;
     }
     else{
-        preptr -> next = ptr -> next; 
+        preptr -> next = ptr -> next;
+        ptr -> next = NULL; 
     }
     return ptr->data;
 }
 
+//funtion to search whether a given node is in the unvisited list
 int searchun(struct vertex *x){
     struct unvisitedl *ptr;
     int flag = 0;
     ptr = un;
     while(ptr != NULL){
-        if(ptr->data->data == x->data){
+        if((ptr->data->data) == (x->data)){
             int flag = 1;
             break;
         }
@@ -627,32 +522,39 @@ int searchun(struct vertex *x){
     return flag;
 }
 
+//funtion to select the minimum weighted edge
 struct vertex * minweight(struct unvisitedl *x){
     struct unvisitedl *ptr,*min;
     min = ptr = x;
     while(ptr !=NULL){
         int check;
         check = searchun(ptr->data);
+        //printf("\n%d",check);
         if(((ptr->data->status)<(min->data->status)) && check==1)
             min = ptr;
         ptr = ptr -> next;
     }
+    //printf("\nmin: %d",min->data->data);
     return min->data;
 }
 
+//funtion to find the shortest path from the give source vertex
 void dijkstra(struct vertex *source){
     struct vertex * ptr;
     redes();
+    //printf("\nstart: %d",start->data);
     ptr=start;
     while(ptr!=NULL){
         inunvisited(ptr);
         ptr = ptr -> next;
     }
-    printf("\npass2");
+    ptr = source;
     source -> status = 0;
-    ptr = minweight(un);
-    printf("\n%d",ptr->data);
-    printf("\npass3");
+    //printf("\npass2 %d\t%d",source -> data,source -> status);
+    //printf("\n%d",un->data->data);
+    //ptr = source;
+    //printf("\n%d",ptr->data);
+    //printf("\npass3");
     //stp1push(ptr);
     while(ptr->status!=INFI && ptr != NULL){
         struct adj *a;
@@ -670,19 +572,38 @@ void dijkstra(struct vertex *source){
             }
             a = a->next;
         }
-        printf("\npass4");
+        //printf("\npass4");
         struct vertex *out;
         out = outunvisited(ptr);
-        printf("\nout:%d",out->data);
+        //printf("\nout:%d",out->data);
         //stp1push(out);
-        ptr = minweight(un);
         if(un==NULL)
             break;
-        printf("\npass ptr:");
+        //rotate(un->data);
+        ptr = minweight(un);        
+        //printf("\npass ptr:");
+        //printf("\n%d",un->data->data);
         //stp1push(ptr);
 
     }
-    printf("\npass");
+    //printf("\npass");
+    printf("\nDISTANCE FOR THE NODES FROM THE SOURCE");
+        struct vertex *printptr;
+        printptr = start;
+        if(start == NULL )
+            printf("\nERROR: Graph is empty");
+        else{
+            while(printptr!=NULL){
+                if(printptr->status==INFI){
+                    printf("\nVertex: %d\t%s\t",printptr->data,"INFI");
+                }
+                else
+                    printf("\nVertex: %d\t%d\t",printptr->data,printptr->status);
+                printptr = printptr -> next;
+            }
+        }
+        printf("\n");
+    un = NULL;
     //stp1print();
     //stpstart1 = NULL;
     remark();
