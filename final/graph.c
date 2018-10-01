@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
-#include "tstlib2.h"
+#include "graphlib.h"
 
 void main(){
     int opt,del;
